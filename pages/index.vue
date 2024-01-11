@@ -16,13 +16,43 @@
     </section>
   
     <section>
-      <Transaction />
-      <Transaction />
-      <Transaction />
-    </section>
+      <Transaction v-for="transaction in transactions" :key="transaction.id" :transaction="transaction" />
+     </section>
   </template>
   
   <script setup>
   import { transactionViewOptions } from '~/constants'
   const selectedView = ref(transactionViewOptions[1])
+
+  const supabase = useSupabaseClient()
+
+  const transactions = ref([])
+
+  const { data, pending } = await useAsyncData('transactions', async() =>{
+    const { data, error } = await supabase
+      .from('transactions')
+      .select()
+
+      if (error) return []
+
+      return data
+  })
+
+  transactions.value = data.value
+
+  const transactionsGroupedByDate = computed(()=>{
+    let grouped = {}
+
+    for (const transaction of transactions.value) {
+      const date = new Date(transaction.created_at).toISOString().split('T')[0]
+
+      if (!grouped[date]) {
+      grouped[date] = []
+    }
+    grouped[date].push(transaction)
+  }
+  return grouped
+})
+
+  console.log(transactionsGroupedByDate.value)
   </script>
