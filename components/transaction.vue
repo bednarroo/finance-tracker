@@ -56,7 +56,7 @@
           icon: 'i-heroicons-check-circle',
           color: 'green'
         })
-        emit('deleted'), props.transaction.id
+        emit('deleted', props.transaction.id)
     } catch (error) {
       toast.add({
           title: 'Transaction deleted',
