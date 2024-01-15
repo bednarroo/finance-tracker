@@ -35,6 +35,24 @@
   const transactions = ref([])
   const isLoading = ref(false)
 
+  const income = computed(
+    () => transactions.value.filter(t => t.type === 'Income')
+  )
+
+  const expense = computed(
+    () => transactions.value.filter(t => t.type === 'Expense')
+  )
+
+  const incomeCount = computed(()=> income.value.length)
+  const expenseCount = computed(()=> expense.value.length)
+
+  const incomeTotal = computed(
+    () => income.value.reduce((sum, transaction => sum + transaction.amount), 0)
+  )
+  const expenseTotal = computed(
+    () => expense.value.reduce((sum, transaction => sum + transaction.amount), 0)
+  )
+
   const fetchTransactions = async () => {
     isLoading.value = true;
     try{
