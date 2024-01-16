@@ -4,8 +4,6 @@
           <template #header>
             Add Transaction
           </template>
-
-          <div>Hello!</div>
           <UForm :state="state">
         <UFormGroup :required="true" label="Transaction Type" name="type" class="mb-4">
           <USelect placeholder="Select the transaction type" :options="types" v-model="state.type" />
