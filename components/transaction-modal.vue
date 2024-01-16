@@ -1,5 +1,12 @@
 <template>
-      <UForm :state="state">
+            <UModal v-model="isOpen">
+        <UCard>
+          <template #header>
+            Add Transaction
+          </template>
+
+          <div>Hello!</div>
+          <UForm :state="state">
         <UFormGroup :required="true" label="Transaction Type" name="type" class="mb-4">
           <USelect placeholder="Select the transaction type" :options="types" v-model="state.type" />
         </UFormGroup>
@@ -27,24 +34,21 @@
 </template>
 
 <script setup>
+
 import { categories, types } from '~/constants'
 const props = defineProps({
-    modelValue: Boolean
+  modelValue: Boolean
 })
-
 const emit = defineEmits(['update:modelValue'])
-
 const state = ref({
-    type: undefined,
-    amount: 0,
-    created_at: undefined,
-    description: undefined,
-    category: undefined
+  type: undefined,
+  amount: 0,
+  created_at: undefined,
+  description: undefined,
+  category: undefined
 })
-
 const isOpen = computed({
-    get: () => props.modelValue,
-    set: (value) => emit('update:modelValue', value)
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
 })
-
 </script>
