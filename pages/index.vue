@@ -76,6 +76,7 @@
       const { data, error } = await supabase
         .from('transactions')
         .select()
+        .order("created_at", {ascending: false})
 
       if (error) return []
 
