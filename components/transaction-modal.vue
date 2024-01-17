@@ -72,7 +72,7 @@ const supabase = useSupabaseClient()
 const toast = useToast()
 
 const save = async () => {
-  if (form.value.errors.length) return
+  if (form?.value?.errors?.length) return
 
   isLoading.value = true
   try {
