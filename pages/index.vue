@@ -25,7 +25,7 @@
         </div>
       </div>
       <div>
-        <TransactionModal v-model="isOpen" />
+        <TransactionModal v-model="isOpen" @saved="refreshTransaction()" />
       <UButton icon="i-heroicons-plus-circle" color="white" variant="solid" label="Add" @click="isOpen = true" />
       </div>
     </section>
