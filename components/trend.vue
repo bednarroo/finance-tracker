@@ -1,31 +1,19 @@
 <template>
-  <div
-    class="grid grid-cols-3 py-4 border-b border-gray-200 dark:border-gray-800 text-gray-900 dark:text-gray-100"
-  >
-    <div class="flex items-center justify-between space-x-4 col-span-2">
-      <div class="flex items-center space-x-1">
-        <UIcon :name="icon" :class="[iconColor]" />
-        <div>{{ transaction.description }}</div>
-      </div>
+  <div>
+    <div class="font-bold" :class="[color]">{{ title }}</div>
 
-      <div>
-        <UBadge color="white" v-if="transaction.category">{{
-          transaction.category
-        }}</UBadge>
-      </div>
+    <div class="text-2xl font-extrabold text-black dark:text-white mb-2">
+      <USkeleton class="h-8 w-full" v-if="loading" />
+      <div v-else>{{ currency }}</div>
     </div>
 
-    <div class="flex items-center justify-end space-x-2">
-      <div>{{ currency }}</div>
-      <div>
-        <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
-          <UButton
-            color="white"
-            variant="ghost"
-            trailing-icon="i-heroicons-ellipsis-horizontal"
-            :loading="isLoading"
-          />
-        </UDropdown>
+    <div>
+      <USkeleton class="h-6 w-full" v-if="loading" />
+      <div v-else class="flex space-x-1 items-center text-sm">
+        <UIcon :name="icon" class="w-6 h-6" :class="{ 'green': trendingUp, 'red': !trendingUp }" />
+        <div class="text-gray-500 dark:text-gray-400">
+          {{ percentageTrend }} vs last period
+        </div>
       </div>
     </div>
   </div>
@@ -33,55 +21,40 @@
 
 <script setup>
 const props = defineProps({
-  transaction: Object,
-});
-const emit = defineEmits(["deleted"]);
-const isIncome = computed(() => props.transaction.type === "Income");
-const icon = computed(() =>
-  isIncome.value ? "i-heroicons-arrow-up-right" : "i-heroicons-arrow-down-left"
-);
-const iconColor = computed(() =>
-  isIncome.value ? "text-green-600" : "text-red-600"
-);
+  title: String,
+  amount: Number,
+  lastAmount: Number,
+  color: String,
+  loading: Boolean
+})
+const { amount } = toRefs(props)
+const trendingUp = computed(
+  () => props.amount >= props.lastAmount
+)
+const icon = computed(
+  () => trendingUp.value ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down'
+)
+const { currency } = useCurrency(amount)
 
-const { currency } = useCurrency(props.transaction.amount);
+const percentageTrend = computed(() => {
+  if (props.amount === 0 || props.lastAmount === 0) return '∞%'
 
-const isLoading = ref(false);
-const toast = useToast();
-const supabase = useSupabaseClient();
+  const bigger = Math.max(props.amount, props.lastAmount)
+  const lower = Math.min(props.amount, props.lastAmount)
 
-const deleteTransaction = async () => {
-  isLoading.value = true;
+  const ratio = ((bigger - lower) / lower) * 100
 
-  try {
-    await supabase.from("transactions").delete().eq("id", props.transaction.id);
-    toast.add({
-      title: "Transaction deleted",
-      icon: "i-heroicons-check-circle",
-    });
-    emit("deleted", props.transaction.id);
-  } catch (error) {
-    toast.add({
-      title: "Transaction deleted",
-      icon: "i-heroicons-exclamation-circle",
-    });
-  } finally {
-    isLoading.value = false;
-  }
-};
+  // console.log(bigger, lower, ratio, Math.ceil(ratio))
 
-const items = [
-  [
-    {
-      label: "Edit",
-      icon: "i-heroicons-pencil-square-20-solid",
-      click: () => console.log("Edit"),
-    },
-    {
-      label: "Delete",
-      icon: "i-heroicons-trash-20-solid",
-      click: deleteTransaction,
-    },
-  ],
-];
+  return `${Math.ceil(ratio)}%`
+})
 </script>
+
+<style scoped>
+.green {
+  @apply text-green-600 dark:text-green-400
+}
+.red {
+  @apply text-red-600 dark:text-red-400
+}
+</style>
