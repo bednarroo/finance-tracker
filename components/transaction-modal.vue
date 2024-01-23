@@ -127,9 +127,8 @@ const save = async () => {
       .upsert({ ...state.value });
 
     if (!error) {
-      toast.add({
+      toastSuccess.add({
         title: "Transaction saved",
-        icon: "i-heroicons-check-circle",
       });
       isOpen.value = false;
       emit("saved");
@@ -138,11 +137,9 @@ const save = async () => {
 
     throw error;
   } catch (e) {
-    toast.add({
+    toastError({
       title: "Transaction not saved",
       description: e.message,
-      icon: "i-heroicons-exclamation-circle",
-      color: "red",
     });
   } finally {
     isLoading.value = false;
