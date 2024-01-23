@@ -127,7 +127,7 @@ const save = async () => {
       .upsert({ ...state.value });
 
     if (!error) {
-      toastSuccess.add({
+      toastSuccess({
         title: "Transaction saved",
       });
       isOpen.value = false;
