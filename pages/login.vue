@@ -40,7 +40,7 @@
 const success = ref(false);
 const email = ref("");
 const pending = ref(false);
-const toast = useToast();
+const toast = useAppToast();
 const supabase = useSupabaseClient();
 
 useRedirectIfAuthenticated();
