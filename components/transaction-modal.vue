@@ -115,7 +115,7 @@ const schema = z.intersection(
 const form = ref();
 const isLoading = ref(false);
 const supabase = useSupabaseClient();
-const toast = useAppToast();
+const { toastError, toastSuccess } = useAppToast();
 
 const save = async () => {
   if (form.value.errors.length) return;
