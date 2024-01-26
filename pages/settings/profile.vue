@@ -1,25 +1,26 @@
 <template>
   <UForm :state="state" :schema="schema" @submit.prevent="saveProfile">
-    <UFormGroup class="mb-4" label="Full name" name="name">
-      <UInput v-model="state.name"></UInput>
+    <UFormGroup class="mb-4" label="Full Name" name="name">
+      <UInput v-model="state.name" />
     </UFormGroup>
+
     <UFormGroup
       class="mb-4"
       label="Email"
       name="email"
-      help="You will receive aconfirmation email on both the old and the new address if you modify the email adress "
+      help="You will receive a confirmation email on both the old and the new addresses if you modify the email address"
     >
-      <UInput v-model="state.email"></UInput>
+      <UInput v-model="state.email" />
     </UFormGroup>
+
     <UButton
       type="submit"
       color="black"
       variant="solid"
       label="Save"
       :loading="pending"
-      :disabled="pedning"
-      >Save</UButton
-    >
+      :disabled="pending"
+    />
   </UForm>
 </template>
 
@@ -29,7 +30,7 @@ import { z } from "zod";
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 
-const { toastSucces, toastError } = useAppToast();
+const { toastSuccess, toastError } = useAppToast();
 const pending = ref(false);
 
 const state = ref({
@@ -56,7 +57,7 @@ const saveProfile = async () => {
     }
     const { error } = await supabase.auth.updateUser(data);
     if (error) throw error;
-    toastSucces({
+    toastSuccess({
       title: "Profile updated",
       description: "Your profile has been updated",
     });
