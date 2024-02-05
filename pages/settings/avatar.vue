@@ -56,9 +56,6 @@ const saveAvatar = async () => {
     toastError({ title: "Select a file to upload first" });
     return;
   }
-
-  console.log(file);
-
   const fileExt = file.name.split(".").pop();
   const fileName = `${Math.random()}.${fileExt}`;
   console.log(fileName);
