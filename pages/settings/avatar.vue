@@ -44,12 +44,11 @@ const user = useSupabaseUser();
 const { toastSuccess, toastError } = useAppToast();
 
 const uploading = ref(false);
-const fileInput = ref(); // Reference to an input with ref="fileInput" attribute
+const fileInput = ref();
+
+console.log(user.value);
 
 const saveAvatar = async () => {
-  // 1. Get the uploaded file
-  //    a) If no file uploaded, show toast error
-  // 2. Generate the new filename
   const file = fileInput.value.input.files[0];
 
   if (!file) {
